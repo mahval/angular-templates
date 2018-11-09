@@ -1,0 +1,30 @@
+<mat-sidenav-container fullscreen>    
+    <mat-sidenav #sidenav mode="side" style="max-width: 80%">   
+        <mat-nav-list dense>            
+            <ng-container *ngFor="let tag of thematicAreaGroups">                
+                <h3 mat-subheader>{{tag.groupName}}</h3>
+                <mat-list-item *ngFor="let ta of tag.thematicAreas">
+                    <mat-checkbox [(ngModel)]="selectedThematicAreaIds[ta.id]" (change)="refreshTableColumns();updateCanvasTableData()">{{ta.name}}</mat-checkbox>
+                </mat-list-item>  
+            </ng-container>
+        </mat-nav-list>
+    </mat-sidenav>
+    
+    <mat-toolbar style="display: flex; padding-top: 20px;">        
+        <button mat-icon-button (click)="sidenav.toggle()">
+            <mat-icon>menu</mat-icon>              
+        </button>
+        <mat-form-field style="flex-grow: 1; margin-right: 20px;">
+            <input matInput placeholder="search" [(ngModel)]="searchtext" />
+        </mat-form-field>      
+        <mat-checkbox [(ngModel)]="showUsedRowsOnly" mat-tooltip="Show only DAC sectors in use" (change)="updateCanvasTableData()">
+            in use
+        </mat-checkbox>
+    </mat-toolbar>
+    <div style="position: absolute; top: 80px; bottom: 5px; left: 8px; right: 8px; overflow-x: auto; -webkit-user-select: none; user-select: none;">
+        <canvastablecontainer [canvastableselectlistener]="this" (sortToggled)="sort()"></canvastablecontainer>
+    </div>
+    <div *ngIf="!dataReady" style="position: fixed; display: flex; justify-content: center; align-items: center; top: 0px; bottom: 0px; left: 0px; right: 0px; z-index: 1000; background-color: rgba(255,255,255,0.5)">
+        <!--<mat-spinner></mat-spinner>-->
+    </div>    
+</mat-sidenav-container>

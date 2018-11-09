@@ -1,0 +1,27 @@
+<style>
+    mat-card {
+        margin: 5px;
+    }
+    
+    mat-card-title {
+        text-align: center;
+    }
+</style>
+
+<div style="display: flex; flex-wrap: wrap; width: 100%">
+    <div style="flex-grow: 1">
+
+        <mat-card>
+            <mat-card-title>
+                Linechart
+            </mat-card-title>
+            <mat-card-content>
+                <div style="height: 300px;">
+                    <linechart #linechart *ngIf="datapoints" [xaxisnav]="true" 
+                    [datapoints]="datapoints" [chartConfig]="lineChartConfig" mode="standard">
+                    </linechart>
+                </div>
+            </mat-card-content>
+        </mat-card>        
+    </div>
+</div>

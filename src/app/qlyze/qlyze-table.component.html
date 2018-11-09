@@ -1,0 +1,10 @@
+<mat-sidenav-container fullscreen>    
+    <mat-toolbar style="display: flex; padding-top: 20px;">        
+        <mat-form-field style="flex-grow: 1; margin-right: 20px;">
+            <input matInput placeholder="search" [(ngModel)]="searchtext" />
+        </mat-form-field>
+    </mat-toolbar>
+    <div style="position: absolute; top: 80px; bottom: 5px; left: 8px; right: 8px; overflow-x: auto; -webkit-user-select: none; user-select: none;">
+        <canvastablecontainer [canvastableselectlistener]="this" (sortToggled)="sortColumn()"></canvastablecontainer>
+    </div>
+</mat-sidenav-container>
