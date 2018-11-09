@@ -1,4 +1,4 @@
-/* 
+/*
  *  Copyright 2010-2016 FinTech Neo AS ( fintechneo.com )- All rights reserved
  */
 
@@ -14,7 +14,7 @@ import { BehaviorSubject } from 'rxjs';
 export class AnimationFrameThrottler {
 
   static taskMap: { [key: string]: Function } = null;
-  static hasChanges: boolean = false;
+  static hasChanges = false;
   static mainLoop() {
     AnimationFrameThrottler.taskMap = {};
 
@@ -41,7 +41,14 @@ export class AnimationFrameThrottler {
   }
 }
 
+export class CanvasTableRowStyle {
+  backgroundColor: string;
+  color: string;
+}
+
 export interface CanvasTableSelectListener {
+  getRowStyle?: (rowObj: any, rowindex: number) => CanvasTableRowStyle;
+
   rowSelected(rowIndex: number, colIndex: number, rowContent: any, multiSelect?: boolean): void;
   isSelectedRow(rowObj: any): boolean;
   isBoldRow(rowObj: any): boolean;
@@ -49,22 +56,22 @@ export interface CanvasTableSelectListener {
 
 export interface CanvasTableColumn {
   name: string;
-  columnSectionName?: string,
+  columnSectionName?: string;
   footerText?: string;
-  footerSumReduce?(prev: number, curr: number): number;
   width: number;
-  backgroundColor?: string,
-  tooltipText?: string,
+  backgroundColor?: string;
+  tooltipText?: string;
   sortColumn: number;
-  excelCellAttributes?: any,
+  excelCellAttributes?: any;
   rowWrapModeHidden?: boolean;
   rowWrapModeMuted?: boolean;
   rowWrapModeChipCounter?: boolean; // E.g. for displaying number of messages in conversation in a "chip"/"badge"
   checkbox?: boolean; // checkbox for selecting rows
-  textAlign?: number, // default = left, 1 = right, 2 = center
+  textAlign?: number; // default = left, 1 = right, 2 = center
   compareValue?: (a: any, b: any) => number;
-  getValue(rowobj: any): any;
   setValue?: (rowobj: any, val: any) => void;
+  footerSumReduce?(prev: number, curr: number): number;
+  getValue(rowobj: any): any;
   getFormattedValue?(val: any): string;
 }
 
@@ -90,29 +97,29 @@ export class CanvasTableColumnSection {
 
 @Component({
   selector: 'canvastable',
-  template: `    
-      <canvas #thecanvas style="position: absolute; width: 100%; height: 100%; user-select: none;" 
+  template: `
+      <canvas #thecanvas style="position: absolute; width: 100%; height: 100%; user-select: none;"
           tabindex="0"></canvas>
           <div #columnOverlay draggable="true" [matTooltip]="floatingTooltip.tooltipText" style="position: absolute;"
                 (DOMMouseScroll)="floatingTooltip=null"
                 (mousewheel)="floatingTooltip=null"
-                (mousemove)="canv.onmousemove($event)"               
+                (mousemove)="canv.onmousemove($event)"
                 (click)="columnOverlayClicked($event)"
-                [style.top.px]="floatingTooltip.top" 
+                [style.top.px]="floatingTooltip.top"
                 [style.left.px]="floatingTooltip.left"
                 [style.width.px]="floatingTooltip.width"
                 [style.height.px]="floatingTooltip.height"
-                  *ngIf="floatingTooltip" 
+                  *ngIf="floatingTooltip"
                 (dragstart)="dragColumnOverlay($event)"
-                >              
+                >
       </div>
       `
 })
 export class CanvasTableComponent implements AfterViewInit, DoCheck {
-  static incrementalId: number = 1;
+  static incrementalId = 1;
   public elementId: string;
-  private _topindex: number = 0.0;
-  public get topindex(): number { return this._topindex; };
+  private _topindex = 0.0;
+  public get topindex(): number { return this._topindex; }
   public set topindex(topindex: number) {
     if (this._topindex !== topindex) {
       this._topindex = topindex;
@@ -120,17 +127,17 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
     }
   }
 
-  @ViewChild("thecanvas") canvRef: ElementRef;
+  @ViewChild('thecanvas') canvRef: ElementRef;
 
   @ViewChild(MatTooltip) columnOverlay: MatTooltip;
 
   private canv: HTMLCanvasElement;
 
   private ctx: any;
-  private _rowheight: number = 30;
-  private fontheight: number = 16;
+  private _rowheight = 30;
+  private fontheight = 16;
 
-  public fontFamily: string = 'Roboto, "Helvetica Neue", sans-serif';
+  public fontFamily = 'Roboto, "Helvetica Neue", sans-serif';
 
   private maxVisibleRows: number;
 
@@ -139,8 +146,8 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
   private touchdownxy: any;
   private scrollbardrag: Boolean = false;
 
-  public _horizScroll: number = 0;
-  public get horizScroll(): number { return this._horizScroll; };
+  public _horizScroll = 0;
+  public get horizScroll(): number { return this._horizScroll; }
   public set horizScroll(horizScroll: number) {
     if (this._horizScroll !== horizScroll) {
       this._horizScroll = horizScroll;
@@ -151,7 +158,7 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
   public _rows: any[] = [];
 
   public _columns: CanvasTableColumn[] = [];
-  public get columns(): CanvasTableColumn[] { return this._columns; };
+  public get columns(): CanvasTableColumn[] { return this._columns; }
   public set columns(columns: CanvasTableColumn[]) {
     if (this._columns !== columns) {
       this._columns = columns;
@@ -162,28 +169,28 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
   }
 
 
-  public hoverRowColor: string = "rgba(0, 0, 0, 0.04)";
-  public selectedRowColor: string = "rgba(225, 238, 255, 1)";
+  public hoverRowColor = 'rgba(0, 0, 0, 0.04)';
+  public selectedRowColor = 'rgba(225, 238, 255, 1)';
 
   public colpaddingleft = 10;
   public colpaddingright = 10;
-  public seprectextraverticalpadding = 4; // Extra padding above/below for separator rectangles 
+  public seprectextraverticalpadding = 4; // Extra padding above/below for separator rectangles
 
   private lastMouseDownEvent: MouseEvent;
   private _hoverRowIndex: number;
-  private get hoverRowIndex(): number { return this._hoverRowIndex };
+  private get hoverRowIndex(): number { return this._hoverRowIndex; }
   private set hoverRowIndex(hoverRowIndex: number) {
     if (this._hoverRowIndex !== hoverRowIndex) {
       this._hoverRowIndex = hoverRowIndex;
       this.hasChanges = true;
     }
-  };
+  }
 
   // Auto row wrap mode (width based on iphone 5) - set to 0 to disable row wrap mode
-  public autoRowWrapModeWidth: number = 540;
+  public autoRowWrapModeWidth = 540;
 
-  public rowWrapMode: boolean = true;
-  public rowWrapModeWrapColumn: number = 2;
+  public rowWrapMode = true;
+  public rowWrapModeWrapColumn = 2;
 
   public hasChanges: boolean;
 
@@ -199,8 +206,8 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
   @Output() touchscroll = new EventEmitter();
 
   constructor(elementRef: ElementRef, private renderer: Renderer, private _ngZone: NgZone) {
-    //this.elementId = "canvasTable"+(CanvasTableComponent.incrementalId++);
-    //console.log("Creating canvas table with id "+this.elementId);    
+    // this.elementId = "canvasTable"+(CanvasTableComponent.incrementalId++);
+    // console.log("Creating canvas table with id "+this.elementId);
   }
 
   ngDoCheck() {
@@ -229,10 +236,10 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
 
   ngAfterViewInit() {
     this.canv = this.canvRef.nativeElement;
-    this.ctx = this.canv.getContext("2d");
+    this.ctx = this.canv.getContext('2d');
 
 
-    this.canv.addEventListener("DOMMouseScroll", (event: MouseWheelEvent) => {
+    this.canv.addEventListener('DOMMouseScroll', (event: MouseWheelEvent) => {
       event.preventDefault();
       this.topindex -= -1 * event.detail / 1;
       this.enforceScrollLimit();
@@ -244,7 +251,7 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
       this.enforceScrollLimit();
     };
 
-    let checkIfScrollbarArea = (clientX: number, clientY: number, wholeScrollbar?: boolean) => {
+    const checkIfScrollbarArea = (clientX: number, clientY: number, wholeScrollbar?: boolean) => {
       if (!this.scrollBarRect) {
         return false;
       }
@@ -253,7 +260,7 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
       const y = clientY - canvrect.top;
       return x > this.scrollBarRect.x && x < this.scrollBarRect.x + this.scrollBarRect.width &&
         (wholeScrollbar || y > this.scrollBarRect.y && y < this.scrollBarRect.y + this.scrollBarRect.height);
-    }
+    };
 
     const checkScrollbarDrag = (clientX: number, clientY: number) => {
 
@@ -276,7 +283,7 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
 
     let previousTouchY: number;
     let previousTouchX: number;
-    let touchMoved: boolean = false;
+    let touchMoved = false;
 
     this.canv.addEventListener('touchstart', (event: TouchEvent) => {
 
@@ -412,7 +419,7 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
         this.hasChanges = false;
       }
       window.requestAnimationFrame(() => paintLoop());
-    }
+    };
 
     this._ngZone.runOutsideAngular(() =>
       window.requestAnimationFrame(() => paintLoop())
@@ -425,8 +432,8 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
     const selectedRowIndex = Math.floor(this.topindex + (event.clientY - canvrect.top) / this.rowheight);
 
     if (!this.columns[selectedColIndex].checkbox) {
-      console.log("Dragstart", event);
-      event.dataTransfer.setData("text/plain", "rowIndex:" + selectedRowIndex);
+      console.log('Dragstart', event);
+      event.dataTransfer.setData('text/plain', 'rowIndex:' + selectedRowIndex);
     } else {
       event.preventDefault();
       this.lastMouseDownEvent = event;
@@ -594,7 +601,6 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
    * Draws a rounded rectangle using the current state of the canvas.
    * If you omit the last three params, it will draw a rectangle
    * outline with a 5 pixel border radius
-   * @param ctx
    * @param x The top left x coordinate
    * @param y The top left y coordinate
    * @param width The width of the rectangle
@@ -608,8 +614,9 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
    * @param [fill = false] Whether to fill the rectangle.
    * @param [stroke = true] Whether to stroke the rectangle.
    */
-  private roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius?: any, fill?: boolean, stroke?: boolean) {
-    if (typeof stroke == 'undefined') {
+  private roundRect(ctx: CanvasRenderingContext2D, x: number, y: number,
+      width: number, height: number, radius?: any, fill?: boolean, stroke?: boolean) {
+    if (typeof stroke === 'undefined') {
       stroke = true;
     }
     if (typeof radius === 'undefined') {
@@ -618,8 +625,8 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
     if (typeof radius === 'number') {
       radius = { tl: radius, tr: radius, br: radius, bl: radius };
     } else {
-      var defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
-      for (var side in defaultRadius) {
+      const defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
+      for (const side in defaultRadius) {
         radius[side] = radius[side] || defaultRadius[side];
       }
     }
@@ -654,18 +661,18 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
   }
 
   private dopaint() {
-    this.ctx.textBaseline = "middle";
-    this.ctx.font = this.fontheight + "px " + this.fontFamily;
+    this.ctx.textBaseline = 'middle';
+    this.ctx.font = this.fontheight + 'px ' + this.fontFamily;
 
-    let canvwidth: number = this.canv.scrollWidth;
-    let canvheight: number = this.canv.scrollHeight;
+    const canvwidth: number = this.canv.scrollWidth;
+    const canvheight: number = this.canv.scrollHeight;
 
     let colx = 0 - this.horizScroll;
     // Columns
-    for (let colindex: number = 0; colindex < this.columns.length; colindex++) {
+    for (let colindex = 0; colindex < this.columns.length; colindex++) {
       const col: CanvasTableColumn = this.columns[colindex];
       if (colx + col.width > 0 && colx < canvwidth) {
-        this.ctx.fillStyle = col.backgroundColor ? col.backgroundColor : "#fff";
+        this.ctx.fillStyle = col.backgroundColor ? col.backgroundColor : '#fff';
         this.ctx.fillRect(colx,
           0,
           colindex === this.columns.length - 1 ?
@@ -682,26 +689,31 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
     }
 
     // Rows
-    for (var n = this.topindex; n < this.rows.length; n += 1.0) {
-      var rowIndex = Math.floor(n);
+    for (let n = this.topindex; n < this.rows.length; n += 1.0) {
+      const rowIndex = Math.floor(n);
 
       if (rowIndex > this.rows.length) {
         break;
       }
 
-      let rowobj = this.rows[rowIndex];
+      const rowobj = this.rows[rowIndex];
 
-      let halfrowheight = (this.rowheight / 2);
-      var rowy = (rowIndex - this.topindex) * this.rowheight;
+      const halfrowheight = (this.rowheight / 2);
+      const rowy = (rowIndex - this.topindex) * this.rowheight;
       if (rowobj) {
         // Clear row area
         // Alternating row colors:
         // let rowBgColor : string = (rowIndex%2===0 ? "#e8e8e8" : "rgba(255,255,255,0.7)");
         // Single row color:
-        let rowBgColor: string = "#fff";
+        const rowstyle = this.selectListener.getRowStyle ?
+          this.selectListener.getRowStyle(rowobj, rowIndex) : {
+            color: '#000',
+            backgroundColor: '#fff'
+          };
+        let rowBgColor = rowstyle.backgroundColor;
 
-        let isBoldRow = this.selectListener.isBoldRow(rowobj);
-        let isSelectedRow = this.selectListener.isSelectedRow(rowobj);
+        const isBoldRow = this.selectListener.isBoldRow(rowobj);
+        const isSelectedRow = this.selectListener.isSelectedRow(rowobj);
         if (this.hoverRowIndex === rowIndex) {
           rowBgColor = this.hoverRowColor;
         }
@@ -714,45 +726,45 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
           this.rowheight);
 
         let x = 0;
-        for (let colindex: number = 0; colindex < this.columns.length; colindex++) {
+        for (let colindex = 0; colindex < this.columns.length; colindex++) {
           const col: CanvasTableColumn = this.columns[colindex];
           const val: any = col.getValue(rowobj);
           let formattedVal: string;
-          const formattedValueCacheKey: string = colindex + ":" + val;
+          const formattedValueCacheKey: string = colindex + ':' + val;
           if (this.formattedValueCache[formattedValueCacheKey]) {
             formattedVal = this.formattedValueCache[formattedValueCacheKey];
-          } else if (("" + val).length > 0 && col.getFormattedValue) {
+          } else if (('' + val).length > 0 && col.getFormattedValue) {
             formattedVal = col.getFormattedValue(val);
             this.formattedValueCache[formattedValueCacheKey] = formattedVal;
           } else {
-            formattedVal = "" + val;
+            formattedVal = '' + val;
           }
           if (this.rowWrapMode && col.rowWrapModeHidden) {
             continue;
-          } else if (this.rowWrapMode && col.rowWrapModeChipCounter && parseInt(val) > 1) {
+          } else if (this.rowWrapMode && col.rowWrapModeChipCounter && parseInt(val, 10) > 1) {
             this.ctx.save();
 
-            this.ctx.strokeStyle = "#01579B";
+            this.ctx.strokeStyle = '#01579B';
             if (isSelectedRow) {
-              this.ctx.fillStyle = "#000";
+              this.ctx.fillStyle = '#000';
             } else {
-              this.ctx.fillStyle = "#01579B";
+              this.ctx.fillStyle = '#01579B';
             }
             this.roundRect(this.ctx,
               canvwidth - 50,
               rowy + 3,
               28,
               15, 10, true);
-            this.ctx.font = "10px " + this.fontFamily;
+            this.ctx.font = '10px ' + this.fontFamily;
 
-            this.ctx.strokeStyle = "#000";
+            this.ctx.strokeStyle = '#000';
             if (isSelectedRow) {
-              this.ctx.fillStyle = "#01579B";
+              this.ctx.fillStyle = '#01579B';
             } else {
-              this.ctx.fillStyle = "#000";
+              this.ctx.fillStyle = '#000';
             }
-            this.ctx.textAlign = "center";
-            this.ctx.fillText(formattedVal + "", canvwidth - 36, rowy + halfrowheight - 15);
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText(formattedVal + '', canvwidth - 36, rowy + halfrowheight - 15);
 
             this.ctx.restore();
 
@@ -767,28 +779,28 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
           x += this.colpaddingleft;
 
           if ((x - this.horizScroll + col.width) >= 0 && formattedVal.length > 0) {
-            this.ctx.fillStyle = "#000";
+            this.ctx.fillStyle = '#000';
             if (isSelectedRow) {
-              this.ctx.fillStyle = "#01579B";
+              this.ctx.fillStyle = '#01579B';
             }
             if (this.rowWrapMode) {
               // Wrap rows if in row wrap mode
               if (colindex >= this.rowWrapModeWrapColumn) {
                 this.ctx.save();
-                this.ctx.font = "14px " + this.fontFamily;
-                this.ctx.fillStyle = "#01579B";
+                this.ctx.font = '14px ' + this.fontFamily;
+                this.ctx.fillStyle = '#01579B';
                 this.ctx.fillText(formattedVal, x, rowy + halfrowheight + 12);
                 this.ctx.restore();
               } else if (col.rowWrapModeMuted) {
                 this.ctx.save();
-                this.ctx.font = "12px " + this.fontFamily;
-                this.ctx.fillStyle = "#777";
+                this.ctx.font = '12px ' + this.fontFamily;
+                this.ctx.fillStyle = '#777';
                 this.ctx.fillText(formattedVal, x, rowy + halfrowheight - 15);
                 this.ctx.restore();
               } else {
                 if (isBoldRow) {
                   this.ctx.save();
-                  this.ctx.font = "bold " + this.ctx.font;
+                  this.ctx.font = 'bold ' + this.ctx.font;
                 }
                 this.ctx.fillText(formattedVal, x, rowy + halfrowheight - 15);
                 if (isBoldRow) {
@@ -823,19 +835,21 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
               } else {
                 if (col.textAlign === 1) {
                   textx += width;
-                  this.ctx.textAlign = "end";
+                  this.ctx.textAlign = 'end';
                 }
 
                 if (isBoldRow) {
-                  this.ctx.font = "bold " + this.ctx.font;
+                  this.ctx.font = 'bold ' + this.ctx.font;
                 }
+                this.ctx.fillStyle = rowstyle.color;
                 this.ctx.fillText(formattedVal, textx, texty);
               }
               this.ctx.restore();
             }
           }
 
-          x += (Math.round(col.width * (this.rowWrapMode && col.rowWrapModeMuted ? (10 / this.fontheight) : 1)) - this.colpaddingleft); // We've already added colpaddingleft above
+          x += (Math.round(col.width * (this.rowWrapMode && col.rowWrapModeMuted ?
+                (10 / this.fontheight) : 1)) - this.colpaddingleft); // We've already added colpaddingleft above
         }
       } else {
         break;
@@ -843,7 +857,7 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
       if (rowy > canvheight) {
         break;
       }
-      this.ctx.fillStyle = "#000";
+      this.ctx.fillStyle = '#000';
 
     }
 
@@ -851,9 +865,9 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
 
     if (!this.rowWrapMode) {
       // No column separators in row wrap mode
-      this.ctx.strokeStyle = "#bbb";
+      this.ctx.strokeStyle = '#bbb';
       let x = 0;
-      for (let colindex: number = 0; colindex < this.columns.length; colindex++) {
+      for (let colindex = 0; colindex < this.columns.length; colindex++) {
         this.ctx.beginPath();
         this.ctx.moveTo(x - this.horizScroll, 0);
         this.ctx.lineTo(x - this.horizScroll, canvheight);
@@ -863,20 +877,20 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
     }
 
     // Scrollbar
-    var scrollbarheight = canvheight / this.rows.length * this.rowheight;
+    let scrollbarheight = canvheight / this.rows.length * this.rowheight;
     if (scrollbarheight < 20) {
       scrollbarheight = 20;
     }
-    var scrollbarpos =
+    const scrollbarpos =
       (this.topindex / (this.rows.length - this.maxVisibleRows)) * (canvheight - scrollbarheight);
 
     if (scrollbarheight < canvheight) {
-      var scrollbarverticalpadding = 4;
-      var scrollbarwidth = 20;
-      var scrollbarx = canvwidth - scrollbarwidth;
-      this.ctx.fillStyle = "#aaa";
+      const scrollbarverticalpadding = 4;
+      const scrollbarwidth = 20;
+      const scrollbarx = canvwidth - scrollbarwidth;
+      this.ctx.fillStyle = '#aaa';
       this.ctx.fillRect(scrollbarx, 0, scrollbarwidth, canvheight);
-      this.ctx.fillStyle = "#fff";
+      this.ctx.fillStyle = '#fff';
       this.scrollBarRect = {
         x: scrollbarx + 1,
         y: scrollbarpos + scrollbarverticalpadding / 2,
@@ -885,20 +899,20 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
       };
 
       if (this.scrollbardrag) {
-        this.ctx.fillStyle = "rgba(200,200,255,0.5)";
+        this.ctx.fillStyle = 'rgba(200,200,255,0.5)';
         this.roundRect(this.ctx,
           this.scrollBarRect.x - 4,
           this.scrollBarRect.y - 4,
           this.scrollBarRect.width + 8,
           this.scrollBarRect.height + 8, 5, true);
 
-        this.ctx.fillStyle = "#fff";
+        this.ctx.fillStyle = '#fff';
         this.ctx.fillRect(this.scrollBarRect.x,
           this.scrollBarRect.y,
           this.scrollBarRect.width,
           this.scrollBarRect.height);
       } else {
-        this.ctx.fillStyle = "#fff";
+        this.ctx.fillStyle = '#fff';
         this.ctx.fillRect(this.scrollBarRect.x, this.scrollBarRect.y, this.scrollBarRect.width, this.scrollBarRect.height);
       }
 
@@ -909,20 +923,20 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
 
 @Component({
   moduleId: window['_moduleidroot'] + '/canvastable/',
-  selector: "canvastablecontainer",
-  templateUrl: "canvastablecontainer.component.html"
+  selector: 'canvastablecontainer',
+  templateUrl: 'canvastablecontainer.component.html'
 })
 export class CanvasTableContainerComponent implements OnInit {
   colResizePreviousX: number;
   colResizeColumnIndex: number;
   columnResized: boolean;
-  sortColumn: number = 0;
-  sortDescending: boolean = false;
-  showColumnSections: boolean = false;
+  sortColumn = 0;
+  sortDescending = false;
+  showColumnSections = false;
 
   savedColumnWidths: number[] = [];
   @ViewChild(CanvasTableComponent) canvastable: CanvasTableComponent;
-  @Input() configname: string = "default";
+  @Input() configname = 'default';
   @Input() canvastableselectlistener: CanvasTableSelectListener;
 
   @Output() sortToggled: EventEmitter<any> = new EventEmitter();
@@ -932,7 +946,7 @@ export class CanvasTableContainerComponent implements OnInit {
   }
 
   ngOnInit() {
-    const savedColumnWidthsString: string = localStorage.getItem(this.configname + "CanvasTableColumnWidths");
+    const savedColumnWidthsString: string = localStorage.getItem(this.configname + 'CanvasTableColumnWidths');
     if (savedColumnWidthsString) {
       this.savedColumnWidths = JSON.parse(savedColumnWidthsString);
     }
@@ -963,7 +977,7 @@ export class CanvasTableContainerComponent implements OnInit {
 
   colresize(clientX: number) {
     if (this.colResizePreviousX) {
-      new AnimationFrameThrottler("colresize", () => {
+      new AnimationFrameThrottler('colresize', () => {
         const prevcol: CanvasTableColumn = this.canvastable.columns[this.colResizeColumnIndex - 1];
         if (prevcol && prevcol.width) {
           prevcol.width += (clientX - this.colResizePreviousX);
@@ -981,8 +995,8 @@ export class CanvasTableContainerComponent implements OnInit {
   }
 
   public sumWidthsBefore(colIndex: number) {
-    let ret: number = 0;
-    for (let n: number = 0; n < colIndex; n++) {
+    let ret = 0;
+    for (let n = 0; n < colIndex; n++) {
       ret += this.canvastable.columns[n].width;
     }
     return ret;
@@ -995,8 +1009,8 @@ export class CanvasTableContainerComponent implements OnInit {
   }
 
   saveColumnWidths() {
-    this.savedColumnWidths = this.canvastable.columns.map((col) => col.width)
-    localStorage.setItem(this.configname + "CanvasTableColumnWidths", JSON.stringify(this.savedColumnWidths));
+    this.savedColumnWidths = this.canvastable.columns.map((col) => col.width);
+    localStorage.setItem(this.configname + 'CanvasTableColumnWidths', JSON.stringify(this.savedColumnWidths));
   }
 
   colresizeend() {
