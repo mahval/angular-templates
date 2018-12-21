@@ -1,6 +1,6 @@
 {
   "name": "fintechneo-angular-templates-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "lib": "ngmakelib src/app/lib.module.ts fintechneo-angulartemplates"
+    "lib": "node ngmakelib-conf.js"
   },  
   "dependencies": {
     "@angular/animations": "~7.0.0",
