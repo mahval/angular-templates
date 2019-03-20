@@ -135,7 +135,7 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
 
   private ctx: any;
   private _rowheight = 30;
-  private fontheight = 16;
+  public fontheight = 16;
 
   public fontFamily = 'Roboto, "Helvetica Neue", sans-serif';
 
@@ -238,16 +238,23 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
     this.canv = this.canvRef.nativeElement;
     this.ctx = this.canv.getContext('2d');
 
-
-    this.canv.addEventListener('DOMMouseScroll', (event: MouseWheelEvent) => {
-      event.preventDefault();
-      this.topindex -= -1 * event.detail / 1;
-      this.enforceScrollLimit();
-    });
-
     this.canv.onwheel = (event: MouseWheelEvent) => {
       event.preventDefault();
-      this.topindex -= event.wheelDelta / 100;
+      switch (event.deltaMode) {
+        case 0:
+          // pixels
+          this.topindex += (event.deltaY / this.rowheight);
+          break;
+        case 1:
+          // lines
+          this.topindex += event.deltaY;
+          break;
+        case 2:
+          // pages
+          this.topindex += (event.deltaY * (this.canv.scrollHeight / this.rowheight));
+          break;
+      }
+
       this.enforceScrollLimit();
     };
 
