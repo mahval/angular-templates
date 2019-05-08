@@ -64,7 +64,7 @@ export class BookTableComponent implements CanvasTableSelectListener, OnInit {
             {
                 name: 'author',
                 columnSectionName: 'Author & title',
-                backgroundColor: '#aaf',
+                backgroundColor: '#AAAAFF',
                 getValue: (book: BookData) => book.author,
                 width: 150,
                 sortColumn: 0
@@ -72,7 +72,7 @@ export class BookTableComponent implements CanvasTableSelectListener, OnInit {
             {
                 name: 'title',
                 columnSectionName: 'Author & title',
-                backgroundColor: '#aaf',
+                backgroundColor: '#AAAAFF',
                 getValue: (book: BookData) => book.title,
                 width: 150,
                 sortColumn: 1
@@ -80,7 +80,7 @@ export class BookTableComponent implements CanvasTableSelectListener, OnInit {
             {
                 name: 'price',
                 columnSectionName: 'Price & category',
-                backgroundColor: '#af0',
+                backgroundColor: '#AAFF00',
                 getValue: (book: BookData) => book.price,
                 width: 100,
                 textAlign: 1,
@@ -92,7 +92,7 @@ export class BookTableComponent implements CanvasTableSelectListener, OnInit {
             {
                 name: 'category',
                 columnSectionName: 'Price & category',
-                backgroundColor: '#af0',
+                backgroundColor: '#AAFF00',
                 getValue: (book: BookData) => book.category,
                 width: 150,
                 sortColumn: 3
