@@ -8,7 +8,7 @@ import { AnimationFrameThrottler,
         CanvasTableSelectListener,
         CanvasTableColumn, CanvasTableContainerComponent, CanvasTableComponent } from '../canvastable/canvastable.module';
 
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { XLSXService } from '../xlsxservice/xlsx.service';
@@ -29,7 +29,7 @@ export class BookData {
 })
 export class BookTableComponent implements CanvasTableSelectListener, OnInit {
 
-    @ViewChild(CanvasTableContainerComponent) canvastablecontainer: CanvasTableContainerComponent;
+    @ViewChild(CanvasTableContainerComponent, { static: true }) canvastablecontainer: CanvasTableContainerComponent;
     canvastable: CanvasTableComponent;
 
     rowdata: BookData[] = [];

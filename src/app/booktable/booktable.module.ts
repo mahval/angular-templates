@@ -1,7 +1,9 @@
 import { NgModule } from "@angular/core";
 import { CanvasTableModule } from "../canvastable/canvastable.module";
 import { BookTableComponent } from './booktable.component';
-import { MatToolbarModule, MatInputModule, MatButtonModule } from "@angular/material";
+import { MatButtonModule } from "@angular/material/button";
+import { MatInputModule } from "@angular/material/input";
+import { MatToolbarModule } from "@angular/material/toolbar";
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 

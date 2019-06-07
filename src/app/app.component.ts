@@ -1,5 +1,5 @@
 import {Component,DoCheck,ViewChild} from '@angular/core';
-import { MatSidenav} from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-root',
@@ -64,7 +64,7 @@ import { MatSidenav} from '@angular/material';
 export class AppComponent implements DoCheck {
     public sidenavmode : string = "over";
     public sidenavopened : boolean = false;
-    @ViewChild(MatSidenav) sidemenu : MatSidenav;
+    @ViewChild(MatSidenav, { static: true }) sidemenu : MatSidenav;
 
     public ngDoCheck() {    
       if(window.innerWidth>1024) {

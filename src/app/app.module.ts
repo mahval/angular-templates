@@ -1,15 +1,18 @@
 import { NgModule }      from '@angular/core';
 import { APP_BASE_HREF} from '@angular/common';
-import { HttpModule,JsonpModule }      from '@angular/http';
+import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { MatSidenavModule,MatToolbarModule,
-    MatCardModule,
-    MatInputModule,MatIconModule,
-    MatExpansionModule,
-    MatButtonModule,MatListModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import {CanvasTableModule} from './canvastable/canvastable.module';
 import { DACModule } from './dac/dac.module';
 import { DACAdminComponent } from './dac/dacadmin.component';
@@ -37,7 +40,7 @@ import { BookTableComponent } from './booktable/booktable.component';
 import { XLSXModule } from './xlsxservice/xlsx.module';
 
 @NgModule({
-  imports:      [ BrowserModule,HttpModule,JsonpModule,FormsModule,
+  imports:      [ BrowserModule,HttpClientModule,HttpClientJsonpModule ,FormsModule,
     MatSidenavModule,
     MatButtonModule,MatListModule,MatIconModule,MatInputModule,
     MatToolbarModule,

@@ -82,7 +82,7 @@ export class SVGLineChartComponent implements AfterViewInit, OnInit, OnDestroy, 
     prevBounds: number[] = [0, 0, 500, 500];
     datapointsChanged: boolean = false;
 
-    @ViewChild("svgelement") svgElm: any;
+    @ViewChild("svgelement", { static: true }) svgElm: any;
 
     destroyTasks: (() => void)[] = []
 

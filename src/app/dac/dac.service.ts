@@ -3,12 +3,12 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AsyncSubject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { DACSector } from './daccodelists.service';
 import { ThematicArea } from './thematicarea.class';
+import { HttpClient } from '@angular/common/http';
 
 export class DACSocketUpdateMessage {
     constructor(public methodname : string,
@@ -26,7 +26,7 @@ export class DACService {
     socketUpdates : BehaviorSubject<DACSocketUpdateMessage> = new BehaviorSubject(null);
     
     constructor(
-        private http : Http,        
+        private http : HttpClient,
         private dialog : MatDialog) {
 
         this.thematicAreas.next([

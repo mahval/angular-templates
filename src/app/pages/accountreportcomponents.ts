@@ -67,7 +67,7 @@ import { mergeMap } from 'rxjs/operators';
   providers: [DatePipe]
 })
 export class AccountOverviewComponent {
-  @ViewChild("linechart") linechart: SVGLineChartComponent;
+  @ViewChild("linechart", { static: true }) linechart: SVGLineChartComponent;
 
   constructor(public dataservice: DataService,
     public pdfservice: PDFService,

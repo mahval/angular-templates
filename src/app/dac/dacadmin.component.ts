@@ -8,7 +8,7 @@ import { DACService, DACSocketUpdateMessage } from './dac.service';
 import { ThematicArea } from './thematicarea.class';
 import { AnimationFrameThrottler, CanvasTableSelectListener, CanvasTableColumn, CanvasTableContainerComponent, CanvasTableComponent } from '../canvastable/canvastable.module';
 
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DACSector, DACCodeListsService } from './daccodelists.service';
 import { filter } from 'rxjs/operators';
 
@@ -28,7 +28,7 @@ export class ThematicAreaGroup {
 })
 export class DACAdminComponent implements CanvasTableSelectListener, OnInit, DoCheck {
 
-    @ViewChild(CanvasTableContainerComponent) canvastablecontainer: CanvasTableContainerComponent;
+    @ViewChild(CanvasTableContainerComponent, { static: true }) canvastablecontainer: CanvasTableContainerComponent;
     canvastable: CanvasTableComponent;
 
     dataReady: boolean;

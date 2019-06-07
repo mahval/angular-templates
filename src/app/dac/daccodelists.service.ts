@@ -3,9 +3,9 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import { AsyncSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 export class DACSector {
     code: number;
@@ -24,7 +24,7 @@ export class DACCodeListsService {
     public static baseUrl: string = '';
 
     constructor(
-        private http: Http,
+        private http: HttpClient,
     ) {
         this.http.get(DACCodeListsService.baseUrl + 'app/dac/DAC_codeLists.xml')
             .pipe(map((res) => new DOMParser().parseFromString(res.text(), 'text/xml')))

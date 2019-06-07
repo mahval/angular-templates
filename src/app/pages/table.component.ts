@@ -9,7 +9,7 @@ import { DataService } from '../data.service';
 })
 export class TableComponent implements CanvasTableSelectListener, OnInit {
 
-    @ViewChild(CanvasTableContainerComponent) canvastablecontainer : CanvasTableContainerComponent;
+    @ViewChild(CanvasTableContainerComponent, { static: true }) canvastablecontainer : CanvasTableContainerComponent;
     canvastable : CanvasTableComponent;
     
     datapoints : number[][];

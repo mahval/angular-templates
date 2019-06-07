@@ -5,7 +5,8 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTooltipModule,MatTooltip,MatIconModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule, MatTooltip } from '@angular/material/tooltip';
 import { CanvasTableComponent,CanvasTableContainerComponent } from './canvastable.component';
 export { CanvasTableColumn, CanvasTableComponent, CanvasTableContainerComponent, CanvasTableSelectListener, AnimationFrameThrottler} from './canvastable.component';
 

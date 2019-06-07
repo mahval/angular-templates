@@ -15,7 +15,7 @@ export class ThematicAreaGroup {
 })
 export class QlyzeTableComponent implements CanvasTableSelectListener, OnInit {
 
-    @ViewChild(CanvasTableContainerComponent) canvastablecontainer: CanvasTableContainerComponent;
+    @ViewChild(CanvasTableContainerComponent, { static: true }) canvastablecontainer: CanvasTableContainerComponent;
     canvastable: CanvasTableComponent;
     thematicAreas: ThematicArea[] = []
     datapoints: any[] = []

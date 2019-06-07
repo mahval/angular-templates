@@ -8,7 +8,7 @@ import {
   ElementRef,
   DoCheck, NgZone, EventEmitter, OnInit, ViewChild
 } from '@angular/core';
-import { MatTooltip } from '@angular/material';
+import { MatTooltip } from '@angular/material/tooltip';
 import { BehaviorSubject } from 'rxjs';
 
 export class AnimationFrameThrottler {
@@ -127,9 +127,9 @@ export class CanvasTableComponent implements AfterViewInit, DoCheck {
     }
   }
 
-  @ViewChild('thecanvas') canvRef: ElementRef;
+  @ViewChild('thecanvas', { static: true }) canvRef: ElementRef;
 
-  @ViewChild(MatTooltip) columnOverlay: MatTooltip;
+  @ViewChild(MatTooltip, { static: false }) columnOverlay: MatTooltip;
 
   private canv: HTMLCanvasElement;
 
@@ -942,7 +942,7 @@ export class CanvasTableContainerComponent implements OnInit {
   showColumnSections = false;
 
   savedColumnWidths: number[] = [];
-  @ViewChild(CanvasTableComponent) canvastable: CanvasTableComponent;
+  @ViewChild(CanvasTableComponent, { static: true }) canvastable: CanvasTableComponent;
   @Input() configname = 'default';
   @Input() canvastableselectlistener: CanvasTableSelectListener;
 

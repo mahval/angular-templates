@@ -1,7 +1,7 @@
 import {Component, DoCheck, Inject, OnInit, Input, Output,
     ViewChild, Renderer2, ElementRef, EventEmitter} from '@angular/core';
 import { Observable } from 'rxjs';
-import { MatDrawer } from '@angular/material';
+import { MatDrawer } from '@angular/material/sidenav';
 
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { ReactiveFormAssistant } from './reactiveformsassistant';
@@ -46,8 +46,8 @@ export class ReactiveFormsDemoComponent implements DoCheck, OnInit {
         AgendaItem.fromTitle('New board member')
     ];
 
-    @ViewChild('sidenav') sidenav: MatDrawer;
-    @ViewChild('dragCanvas') dragCanvas: ElementRef;
+    @ViewChild('sidenav', { static: true }) sidenav: MatDrawer;
+    @ViewChild('dragCanvas', { static: true }) dragCanvas: ElementRef;
 
     draggedAgendaItem: AgendaItem;
 
